@@ -4,7 +4,8 @@
 
 > A simple view engine that has 100% JS features
 
-Neobiz.js is pure JS lang, transpile Object to HTML as string
+[Github](https://www.npmjs.com/package/neobiz-express?activeTab=dependencies)
+Neobiz.js is pure in JS lang, transform Object into HTML
 
 `read /example dir to understanding`
 
