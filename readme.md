@@ -4,14 +4,14 @@
 
 > A simple view engine that has 100% JS features
 
-[Github](https://www.npmjs.com/package/neobiz-express?activeTab=dependencies)
+[[Github]](https://github.com/harakun24/neobiz.js)
 Neobiz.js is pure in JS lang, transform Object into HTML
 
 `read /example dir to understanding`
 
-[this link to usage in express.js](https://www.npmjs.com/package/neobiz-express?activeTab=dependencies)
+[link to usage in express.js](https://www.npmjs.com/package/neobiz-express?activeTab=dependencies)
 
-**Features**
+**Function**
 
 | function | params                             | return-type | description                     |
 | -------- | ---------------------------------- | ----------- | ------------------------------- |
@@ -22,10 +22,10 @@ Neobiz.js is pure in JS lang, transform Object into HTML
 
 #### Why use this?
 
-- One lang for all, back end - view - browser script all js!
-- **directly** interact data or Model with a view
+- Integrating back-end to view
+- **directly** manipulation data or Model with a view
 - Generate static html file
-- Full control of serving the view. Such as encrypting the data before serve, or just like conditional and loop case
+- Full control of view. Such as filtering, encrypting the data before serve, or just like conditional and loop case
 - Almost no need to learn anything. Just need to learn how to render
 - Limitless potential, because it's just js. Almost all library should be compatible
 
@@ -35,7 +35,7 @@ It's just an Object!
 
 ```js
 {
-  // text property is same as innerHTML
+  // text property is same as innerText
   h1: {
     text: "Hello World!",
   }
@@ -77,6 +77,17 @@ nested dom:
 }
 ```
 
+expression & operator
+
+```js
+{
+  span: [
+    { text: 24 + 12 / 6 },
+    { text: !false },
+  ],
+}
+```
+
 siblings dom:
 
 There is a case like this:
@@ -86,7 +97,7 @@ There is a case like this:
 <li>banana</li>
 ```
 
-Object can not use 2 keys with the same name, instead use this:
+Object can not use 2 keys with the same name
 
 ```js
 // Don't do this
@@ -125,6 +136,56 @@ Can't use array? just use this:
   p:{span:{text:"This is in the middle"}},
   "li ":{text:"banana"},
 }
+```
+
+### Components
+
+```js
+import header from "./header.v.js"; //function type
+import footer from "./footer.v.js"; //object type
+
+render({
+  div: header({ user: "dim24" }),
+  p: { text: "this is text" },
+  div: footer,
+});
+```
+
+header.v.js
+
+```js
+export default ({ user }) => ({ h1: { text: `Hi, ${user}` } });
+```
+
+footer.v.js
+
+```js
+export default {
+  script: { src: "/assets/js/main.js" },
+  span: { text: "this is footer" },
+};
+```
+
+### Interacting with DOM
+
+use `script` to interact with browser with **html** property
+
+wrap the script with a function, or use string
+
+```js
+{
+  button:{onclick:"sayHi(this)",id:"hi-button"},
+  script:{
+    html:()=>{
+      document.getElementById("hi-button").innerText="Click me!";
+
+      function sayHi(el){
+        el.innerText="Hi!";
+      }
+    }
+  }
+}
+
 ```
 
 ## Pass Value

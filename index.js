@@ -19,14 +19,23 @@ function render(val = {}) {
           result += ` ${k[0]}='${k[1]}'`;
         // else if (typeof k[1] == "function") result += ` ${k[0]}='${k[1] + ""}'`;
         else if (k[0] == "text")
-          inn = `${k[1]
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#39;")}`;
-        else if (k[0] == "html") inn = `${k[1]}`;
-        else temp.push(k);
+          inn = `${
+            typeof k[1] == "string"
+              ? k[1]
+                  .replace(/&/g, "&amp;")
+                  .replace(/</g, "&lt;")
+                  .replace(/>/g, "&gt;")
+                  .replace(/"/g, "&quot;")
+                  .replace(/'/g, "&#39;")
+              : k[1].toString()
+          }`;
+        else if (k[0] == "html") {
+          inn = `${
+            typeof k[1] != "function" ? k[1] : (k[1] + "").replace(/.*{/, "")
+          }`;
+          inn =
+            typeof k[1] == "string" ? inn : inn.substring(0, inn.length - 1);
+        } else temp.push(k);
       });
       const stat = !["input", "link", "br", "hr"].includes(e[0]);
       if (stat) result += ">";
