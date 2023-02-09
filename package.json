@@ -1,6 +1,6 @@
 {
   "name": "neobiz",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "simple view engine yet powerful with javascript features",
   "main": "index.js",
   "scripts": {
