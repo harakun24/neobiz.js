@@ -19,6 +19,16 @@ Neobiz.js is pure JS lang, transpile Object to HTML as string
 | range    | length:int, start:int              | Array       | shortcut for looping in a range |
 | partial  | source:string                      | AsyncFn     | including other file            |
 
+#### Why use this?
+
+- One lang for all, backend-view-browser script all just use js!
+- **directly** interact data or Model with a view
+- Could generate static html file
+- Full control of serving the view. Such as encrypting the data before serve, or just like conditional and loop case
+- Almost no need to learn anything. Just need to learn how to render
+- Limitless potential, because it's just js. Almost all library should be compatible
+- Just like JSON replace XML
+
 ## Basic syntax
 
 It's just Object in js!
@@ -40,7 +50,7 @@ properties dom
   // text property is same as innerHTML
   h1: {
     class:"heading",
-    text: "Hello World!";
+    text: "Hello World!",
     style:"color: #DC1E1E"
   }
 }
@@ -98,11 +108,14 @@ What if there is somethings in the middle of list?
 
 Can't use array? just use this:
 
+> use string as key could distinc element just with a space
+> no need to worry, it will render without space
+
 ```js
 {
   li:{text:"orange"},
   p:{span:{text:"This is in the middle"}}
-  li:{text:"banana"},
+  "li ":{text:"banana"},
 }
 ```
 
@@ -231,7 +244,7 @@ while
 
 ### partial
 
-make sure to export as function & default
+make sure to default export as a function
 
 ```js
 import { render, partial } from "../index.js";
