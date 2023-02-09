@@ -8,7 +8,10 @@
   },
   "keywords": [
     "view engine",
-    "template engine",
+    "template",
+    "dom",
+    "html",
+    "",
     "view"
   ],
   "license": "ISC"
