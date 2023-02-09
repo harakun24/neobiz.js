@@ -16,3 +16,8 @@ console.log(
 outFile("./basic.html", {
   h1: { text: "Hello World!" },
 });
+
+// properties
+render({
+  h1: { class: "heading", id: "main", text: "Hello World!" },
+});

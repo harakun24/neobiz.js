@@ -15,10 +15,17 @@ function render(val = {}) {
       const temp = [];
       let inn = "";
       Object.entries(e[1]).forEach((k) => {
-        if (typeof k[1] == "string" && k[0] != "text")
+        if (typeof k[1] == "string" && k[0] != "text" && k[0] != "html")
           result += ` ${k[0]}='${k[1]}'`;
-        else if (typeof k[1] == "function") result += ` ${k[0]}='${k[1] + ""}'`;
-        else if (k[0] == "text") inn = `${k[1]}`;
+        // else if (typeof k[1] == "function") result += ` ${k[0]}='${k[1] + ""}'`;
+        else if (k[0] == "text")
+          inn = `${k[1]
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;")}`;
+        else if (k[0] == "html") inn = `${k[1]}`;
         else temp.push(k);
       });
       const stat = !["input", "link", "br", "hr"].includes(e[0]);

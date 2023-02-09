@@ -15,29 +15,28 @@ Neobiz.js is pure JS lang, transpile Object to HTML as string
 | function | params                             | return-type | description                     |
 | -------- | ---------------------------------- | ----------- | ------------------------------- |
 | render   | content:object                     | string      | rendering to HTML               |
-| outFile  | destination:string, content:object |             | generate static HTML file       |
+| outFile  | destination:string, content:object | void        | generate static HTML file       |
 | range    | length:int, start:int              | Array       | shortcut for looping in a range |
 | partial  | source:string                      | AsyncFn     | including other file            |
 
 #### Why use this?
 
-- One lang for all, backend-view-browser script all just use js!
+- One lang for all, back end - view - browser script all js!
 - **directly** interact data or Model with a view
-- Could generate static html file
+- Generate static html file
 - Full control of serving the view. Such as encrypting the data before serve, or just like conditional and loop case
 - Almost no need to learn anything. Just need to learn how to render
 - Limitless potential, because it's just js. Almost all library should be compatible
-- Just like JSON replace XML
 
 ## Basic syntax
 
-It's just Object in js!
+It's just an Object!
 
 ```js
 {
   // text property is same as innerHTML
   h1: {
-    text: "Hello World!";
+    text: "Hello World!",
   }
 }
 // <h1>Hello World!</h1>
@@ -47,14 +46,22 @@ properties dom
 
 ```js
 {
-  // text property is same as innerHTML
   h1: {
     class:"heading",
     text: "Hello World!",
-    style:"color: #DC1E1E"
+    style:"color: #DC1E1E",
   }
 }
 // <h1 class="heading" style="color: #DC1E1E">Hello World!</h1>
+```
+
+innerText & innerHTML:
+
+```js
+  {
+    h1: { text: "<b>this is a text</b>" },
+    ul: { html: "<li>this will be render as html</li>" },
+  }
 ```
 
 nested dom:
@@ -63,7 +70,7 @@ nested dom:
 {
   body: {
     h1: {
-      text: "Hello World!";
+      text: "Hello World!",
     }
   }
 }
@@ -78,7 +85,7 @@ There is a case like this:
 <li>banana</li>
 ```
 
-Object can not use 2 keys with same name, instead use this:
+Object can not use 2 keys with the same name, instead use this:
 
 ```js
 // Don't do this
@@ -108,13 +115,13 @@ What if there is somethings in the middle of list?
 
 Can't use array? just use this:
 
-> use string as key could distinc element just with a space
+> use string as key could distinc an element with just a space
 > no need to worry, it will render without space
 
 ```js
 {
   li:{text:"orange"},
-  p:{span:{text:"This is in the middle"}}
+  p:{span:{text:"This is in the middle"}},
   "li ":{text:"banana"},
 }
 ```
@@ -263,7 +270,7 @@ export default (title) => ({ title: { text: title } });
 
 ### templating
 
-this example use single file usage. for modular usage leave to you
+this example use single file usage. for modular usage leave to you, or just read the example dir
 
 ```js
 import { render } from "../index.js";
