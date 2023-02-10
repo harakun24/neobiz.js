@@ -1,7 +1,6 @@
 /** @format */
 "use strict";
 const path = require("path");
-
 function render(val = {}) {
   let result = "";
   Object.entries(val).forEach((e) => {
@@ -10,14 +9,13 @@ function render(val = {}) {
         result += render({ [e[0]]: g });
       });
     } else if (typeof e[1] == "object") {
-      e[0] = e[0].replace(" ", "");
+      e[0] = e[0].replace(/\s/g, "");
       result += `<${e[0]}`;
       const temp = [];
       let inn = "";
       Object.entries(e[1]).forEach((k) => {
         if (typeof k[1] == "string" && k[0] != "text" && k[0] != "html")
           result += ` ${k[0]}='${k[1]}'`;
-        // else if (typeof k[1] == "function") result += ` ${k[0]}='${k[1] + ""}'`;
         else if (k[0] == "text")
           inn = `${
             typeof k[1] == "string"
@@ -68,6 +66,7 @@ module.exports = {
   render,
   range,
   outFile,
+  fromStr: require("./str.h.js"),
   partial: async (src) => {
     const { default: i } = await import(
       path.join("file:\\\\", process.cwd(), src)

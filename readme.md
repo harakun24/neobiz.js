@@ -11,14 +11,15 @@ Neobiz.js is pure in JS lang, transform Object into HTML
 
 [link to usage in express.js](https://www.npmjs.com/package/neobiz-express?activeTab=dependencies)
 
-**Function**
+---
 
-| function | params                             | return-type | description                     |
-| -------- | ---------------------------------- | ----------- | ------------------------------- |
-| render   | content:object                     | string      | rendering to HTML               |
-| outFile  | destination:string, content:object | void        | generate static HTML file       |
-| range    | length:int, start:int              | Array       | shortcut for looping in a range |
-| partial  | source:string                      | AsyncFn     | including other file            |
+| function | params                               | return-type | description                      |
+| -------- | ------------------------------------ | ----------- | -------------------------------- |
+| render   | content[object]                      | string      | rendering to HTML                |
+| outFile  | destination[string], content[object] | void        | generate static HTML file        |
+| range    | length[int], start[int]              | Array       | shortcut for looping in a range  |
+| partial  | source[string]                       | AsyncFn     | including other file             |
+| fromStr  | str[string]                          | Object      | generate object from HTML string |
 
 #### Why use this?
 
@@ -186,6 +187,43 @@ wrap the script with a function, or use string
   }
 }
 
+```
+
+## fromStr
+
+If you already have an html file and want to modify it, or make it as a template, just use `fromStr` function
+
+> this function is still has some issues, but for simple html fromStr is work fine!
+
+- wrap all tag into single parent
+- use external script and css
+- repetitive nested could caused weird behavior (help me, please!)
+
+I still try to improve this feature. **if you can provide some help** just tell me please... :)
+
+```js
+const { fromStr, render } = require("./index");
+
+const { div } = fromStr(`
+<div>
+    <h1>Hello dims!</h1>
+</div>
+`);
+
+div.id = "main";
+div.h1.class = "heading";
+div.p = { text: "this is a whole text" };
+
+console.log(render({ div }));
+```
+
+result
+
+```html
+<div id="main">
+  <h1 class="heading">Hello dims!</h1>
+  <p>this is a whole text</p>
+</div>
 ```
 
 ## Pass Value
