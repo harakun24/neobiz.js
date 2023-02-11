@@ -60,7 +60,6 @@ function render(val = {}) {
           result += `</${e[0]}>`;
         }
       if (!stat) result += "/>";
-    } else {
     }
   });
   result = result.replace(/[\r\n\t]/gm, "");
