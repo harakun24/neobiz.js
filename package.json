@@ -1,7 +1,7 @@
 {
   "name": "neobiz",
-  "version": "1.3.1",
-  "description": "A simple view engine powered by JS",
+  "version": "1.3.4",
+  "description": "A simple view engine with JS features",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
