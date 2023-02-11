@@ -35,31 +35,12 @@ function render(val = {}) {
             typeof k[1] == "string" ? inn : inn.substring(0, inn.length - 1);
         } else temp.push(k);
       });
-      const stat = ![
-        "input",
-        "link",
-        "br",
-        "hr",
-        "area",
-        "base",
-        "br",
-        "col",
-        "embed",
-        "img",
-        "meta",
-        "param",
-        "source",
-        "track",
-        "wbr",
-      ].includes(e[0]);
+      const stat = !["input", "link", "br", "hr"].includes(e[0]);
+      if (stat) result += ">";
       result += inn;
-      for (let i of temp)
-        if (stat) {
-          result += ">";
-          result += render({ [i[0]]: i[1] });
-          result += `</${e[0]}>`;
-        }
-      if (!stat) result += "/>";
+      for (let i of temp) result += render({ [i[0]]: i[1] });
+      if (stat) result += `</${e[0]}>`;
+      else result += "/>";
     } else {
     }
   });
