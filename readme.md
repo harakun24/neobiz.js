@@ -4,8 +4,6 @@
 
 # Documentation Neobiz.js
 
- <img src="https://raw.githubusercontent.com/harakun24/assets-neobiz/main/icon.png" style="width:150px" />
-
 > A simple view engine that has 100% JS features
 
 [[Github example]](https://github.com/harakun24/assets-neobiz)
