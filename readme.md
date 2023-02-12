@@ -15,6 +15,45 @@ Neobiz.js is pure in JS lang, transform Object into HTML
 
 ---
 
+## Example with `vue` in browser
+
+page.js
+
+```js
+import { outFile } from "neobiz";
+
+outFile("./welcome.html", {
+  div: {
+    script: [
+      { src: "https://unpkg.com/vue@3/dist/vue.global.js" },
+      { src: "https://unpkg.com/neobiz@1.4.0/browser.js" },
+      { src: "./my-component.js" },
+    ],
+    id: "app",
+  },
+  script: {
+    html: () => {
+      const { createApp } = Vue;
+
+      createApp(myComponent).mount("#app");
+    },
+  },
+});
+```
+
+my-component.js
+
+```js
+const myComponent = {
+  data() {
+    return { msg: "hi, this is example" };
+  },
+  template: render({ h1: { text: "{{msg}}" } }),
+};
+```
+
+<br>
+
 | function | params                               | return-type | description                      |
 | -------- | ------------------------------------ | ----------- | -------------------------------- |
 | render   | content[object]                      | string      | rendering to HTML                |
