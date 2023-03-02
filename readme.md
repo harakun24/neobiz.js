@@ -2,11 +2,10 @@
 
 <!-- @format -->
 
-# Documentation Neobiz.js
+# Documentation Neobiz.js 3.1
 
 > A simple view engine that has 100% JS features
 
-[[Github example]](https://github.com/harakun24/assets-neobiz)
 Neobiz.js is pure in JS lang, transform Object into HTML
 
 `read /example dir to understanding`
@@ -20,13 +19,13 @@ Neobiz.js is pure in JS lang, transform Object into HTML
 page.js
 
 ```js
-import { outFile } from "neobiz";
+import "neobiz";
 
-outFile("./welcome.html", {
+({
   div: {
     script: [
       { src: "https://unpkg.com/vue@3/dist/vue.global.js" },
-      { src: "https://unpkg.com/neobiz@1.4.0/browser.js" },
+      { src: "https://unpkg.com/neobiz@3.1.0/browser.js" },
       { src: "./my-component.js" },
     ],
     id: "app",
@@ -38,7 +37,7 @@ outFile("./welcome.html", {
       createApp(myComponent).mount("#app");
     },
   },
-});
+}.outFile("./welcome.html"));
 ```
 
 my-component.js
@@ -48,19 +47,18 @@ const myComponent = {
   data() {
     return { msg: "hi, this is example" };
   },
-  template: render({ h1: { text: "{{msg}}" } }),
+  template: { h1: { text: "{{msg}}" } }.render,
 };
 ```
 
 <br>
 
-| function | params                               | return-type | description                      |
-| -------- | ------------------------------------ | ----------- | -------------------------------- |
-| render   | content[object]                      | string      | rendering to HTML                |
-| outFile  | destination[string], content[object] | void        | generate static HTML file        |
-| range    | length[int], start[int]              | Array       | shortcut for looping in a range  |
-| partial  | source[string]                       | AsyncFn     | including other file             |
-| fromStr  | str[string]                          | Object      | generate object from HTML string |
+| properties | context                               | return-type | description                      |
+| ---------- | ------------------------------------- | ----------- | -------------------------------- |
+| render     | Object                                | string      | rendering to HTML                |
+| outFile    | Object @params[destination]           | void        | generate static HTML file        |
+| range      | Array @params length[int], start[int] | Array       | shortcut for looping in a range  |
+| repulse    | String                                | Object      | generate object from HTML string |
 
 #### Why use this?
 
@@ -73,6 +71,12 @@ const myComponent = {
 
 ## Basic syntax
 
+How to use? just import this:
+
+```js
+import "neobiz";
+```
+
 It's just an Object!
 
 ```js
@@ -81,7 +85,7 @@ It's just an Object!
   h1: {
     text: "Hello World!",
   }
-}
+}.render
 // <h1>Hello World!</h1>
 ```
 
@@ -194,17 +198,17 @@ Can't use array? just use this:
 }
 ```
 
-### Components
+### Components / Partials
 
 ```js
 import header from "./header.v.js"; //function type
 import footer from "./footer.v.js"; //object type
 
-render({
+{
   div: header({ user: "dim24" }),
   p: { text: "this is text" },
   div: footer,
-});
+}.render;
 ```
 
 header.v.js
@@ -232,7 +236,7 @@ wrap the script with a function, or use string
 {
   button:{onclick:"sayHi(this)",id:"hi-button"},
   script:{
-    html:()=>{
+    html(){
       document.getElementById("hi-button").innerText="Click me!";
 
       function sayHi(el){
@@ -244,32 +248,30 @@ wrap the script with a function, or use string
 
 ```
 
-## fromStr
+## Repulse
 
-If you already have an html file and want to modify it, or make it as a template, just use `fromStr` function
+If you already have an html file and want to modify it, or make it as a template, just use this
 
-> this function is still has some issues, but for simple html fromStr is work fine!
+> this function is still has a lot issues, use only in a simple case
 
-- wrap all tag into single parent
-- use external script and css
-- repetitive nested could caused weird behavior (help me, please!)
+- need to wrap all tag into a single parent
+- recommended to use external script and css
+- repetitive / nested could caused weird behavior (help me, please!)
 
 I still try to improve this feature. **if you can provide some help** just tell me please... :)
 
 ```js
-const { fromStr, render } = require("./index");
-
-const { div } = fromStr(`
+const { div } = `
 <div>
     <h1>Hello dims!</h1>
 </div>
-`);
+`.repulse;
 
 div.id = "main";
 div.h1.class = "heading";
 div.p = { text: "this is a whole text" };
 
-console.log(render({ div }));
+console.log({ div }.render);
 ```
 
 result
@@ -286,9 +288,7 @@ result
 use function
 
 ```js
-import { render } from "../index.js";
-
-console.log(render(((user) => ({ h1: { text: `Hello, ${user}` } }))("Vins")));
+console.log(((user) => ({ h1: { text: `Hello, ${user}` } }))("Vins").render);
 ```
 
 or
@@ -296,7 +296,7 @@ or
 ```js
 const greeting = (user) => ({ h1: `Hello, ${user}` });
 
-console.log(render(greeting("Vins")));
+console.log(greeting("Vins").render);
 ```
 
 ## Control Flow
@@ -354,11 +354,10 @@ IIFE switch-case
 range & map:
 
 ```js
-import { render, range } from "../index.js";
 
   {
     ul: {
-      li: range(8, 1).map((item) => ({ text: "data-" + item })),
+      li: [].range(8, 1).map((item) => ({ text: "data-" + item })),
     },
   }
 ```
@@ -402,34 +401,12 @@ while
   }
 ```
 
-## partial & templating
-
-### partial
-
-make sure to default export as a function
-
-```js
-import { render, partial } from "../index.js";
-
-  {
-    head: (await partial("./exported.v.js"))("example page"),
-    h1: { text: "This is example" },
-  }
-```
-
-`/exported.v.js`
-
-```js
-export default (title) => ({ title: { text: title } });
-```
-
-### templating
+## templating
 
 this example use single file usage. for modular usage leave to you, or just read the example dir
 
 ```js
-import { render } from "../index.js";
-
+//template file
 const template = (content) => ({
   div: {
     class: "main wrapper",
@@ -437,6 +414,7 @@ const template = (content) => ({
   },
 });
 
+//content file
 template({
   h1: { text: "Hello World!" },
 });

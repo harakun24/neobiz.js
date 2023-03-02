@@ -1,9 +1,99 @@
 /** @format */
 
+"use strict";
+function render(val = {}) {
+  let result = "";
+  try {
+    Object.entries(val).forEach((e) => {
+      if (e[1].length) {
+        e[1].forEach((g) => {
+          result += render({ [e[0]]: g });
+        });
+      } else if (typeof e[1] == "object") {
+        e[0] = e[0].replace(/\s/g, "");
+        result += `<${e[0]}`;
+        const temp = [];
+        let inn = "";
+        Object.entries(e[1]).forEach((k) => {
+          if (typeof k[1] == "string" && k[0] != "text" && k[0] != "html") {
+            result += ` ${k[0]}='${k[1].toString()}'`;
+          } else if (k[0] == "text")
+            inn = `${
+              typeof k[1] == "string"
+                ? k[1]
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#39;")
+                : k[1].toString()
+            }`;
+          else if (k[0] == "html") {
+            inn = `${
+              typeof k[1] != "function"
+                ? k[1]
+                : (k[1] + "")
+                    .replace(/.*{/, "")
+                    .split("")
+                    .reverse()
+                    .join("")
+                    .replace(/}/, "")
+                    .split("")
+                    .reverse()
+                    .join("")
+            }`;
+            // typeof k[1] == "string" ? inn : inn.substring(0, inn.length - 1);
+          } else temp.push(k);
+        });
+
+        const stat = ![
+          "input",
+          "link",
+          "br",
+          "hr",
+          "area",
+          "base",
+          "br",
+          "col",
+          "embed",
+          "img",
+          "meta",
+          "param",
+          "source",
+          "track",
+          "wbr",
+        ].includes(e[0]);
+        if (stat) {
+          result += ">";
+          result += inn;
+          for (let i of temp) {
+            result += render({ [i[0]]: i[1] });
+          }
+          result += `</${e[0]}>`;
+        } else {
+          if (!stat) result += "/>";
+        }
+      }
+    });
+    result = result.replace(/[\r\n\t]/gm, "");
+    result = result.replace(/\s{2,}/gm, " ");
+  } catch (e) {
+    result = `<p>Error: ${e.message}</p>`;
+  }
+  return result;
+}
+function rdr(val = {}) {
+  let result = "";
+  if (Array.isArray(val)) {
+    val.forEach((value) => {
+      result += render(value);
+    });
+  } else result = render(val);
+  return result;
+}
 function range(length, start = 0) {
   return [...Array(length)].map(() => start++);
 }
-
 function fromStr(letter, prefix = 0) {
   if (letter == "") return {};
 
@@ -100,80 +190,21 @@ function fromStr(letter, prefix = 0) {
   }
   return temp;
 }
-function render(val = {}) {
-  let result = "";
-  Object.entries(val).forEach((e) => {
-    if (e[1].length) {
-      e[1].forEach((g) => {
-        result += render({ [e[0]]: g });
-      });
-    } else if (typeof e[1] == "object") {
-      e[0] = e[0].replace(/\s/g, "");
-      result += `<${e[0]}`;
-      const temp = [];
-      let inn = "";
-      Object.entries(e[1]).forEach((k) => {
-        if (typeof k[1] == "string" && k[0] != "text" && k[0] != "html") {
-          result += ` ${k[0]}='${k[1].toString()}'`;
-        } else if (k[0] == "text")
-          inn = `${
-            typeof k[1] == "string"
-              ? k[1]
-                  .replace(/&/g, "&amp;")
-                  .replace(/</g, "&lt;")
-                  .replace(/>/g, "&gt;")
-                  .replace(/"/g, "&quot;")
-                  .replace(/'/g, "&#39;")
-              : k[1].toString()
-          }`;
-        else if (k[0] == "html") {
-          inn = `${
-            typeof k[1] != "function"
-              ? k[1]
-              : (k[1] + "")
-                  .replace(/.*{/, "")
-                  .split("")
-                  .reverse()
-                  .join("")
-                  .replace(/}/, "")
-                  .split("")
-                  .reverse()
-                  .join("")
-          }`;
-          // typeof k[1] == "string" ? inn : inn.substring(0, inn.length - 1);
-        } else temp.push(k);
-      });
 
-      const stat = ![
-        "input",
-        "link",
-        "br",
-        "hr",
-        "area",
-        "base",
-        "br",
-        "col",
-        "embed",
-        "img",
-        "meta",
-        "param",
-        "source",
-        "track",
-        "wbr",
-      ].includes(e[0]);
-      if (stat) {
-        result += ">";
-        result += inn;
-        for (let i of temp) {
-          result += render({ [i[0]]: i[1] });
-        }
-        result += `</${e[0]}>`;
-      } else {
-        if (!stat) result += "/>";
-      }
-    }
-  });
-  result = result.replace(/[\r\n\t]/gm, "");
-  result = result.replace(/\s{2,}/gm, " ");
-  return result;
-}
+Object.defineProperty({}.__proto__, "render", {
+  get: function () {
+    return rdr(this);
+  },
+});
+
+Object.defineProperty("".__proto__, "repulse", {
+  get: function () {
+    return fromStr(this);
+  },
+});
+
+Object.defineProperty([].__proto__, "range", {
+  value: function (range2, start = 0) {
+    return range(range2, start);
+  },
+});
