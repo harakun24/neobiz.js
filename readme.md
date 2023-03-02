@@ -77,15 +77,15 @@ How to use? just import this:
 import "neobiz";
 ```
 
-It's just an Object!
+It's just an Object! `wrap in () to create a statement or just assign to a var`
 
 ```js
-{
+({
   // text property is same as innerText
   h1: {
     text: "Hello World!",
-  }
-}.render
+  },
+}.render);
 // <h1>Hello World!</h1>
 ```
 
