@@ -5,7 +5,7 @@ function render(val = {}) {
   let result = "";
   try {
     Object.entries(val).forEach((e) => {
-      if (e[1].length) {
+      if (Array.isArray(e[1])) {
         e[1].forEach((g) => {
           result += render({ [e[0]]: g });
         });
@@ -17,6 +17,17 @@ function render(val = {}) {
         Object.entries(e[1]).forEach((k) => {
           if (typeof k[1] == "string" && k[0] != "text" && k[0] != "html") {
             result += ` ${k[0]}='${k[1].toString()}'`;
+          }
+          if (typeof k[1] == "function" && k[0] != "text" && k[0] != "html") {
+            result += ` ${k[0]}='${(k[1] + "")
+              .replace(/.*{/, "")
+              .split("")
+              .reverse()
+              .join("")
+              .replace(/}/, "")
+              .split("")
+              .reverse()
+              .join("")}'`;
           } else if (k[0] == "text")
             inn = `${
               typeof k[1] == "string"
@@ -83,7 +94,7 @@ function render(val = {}) {
   return result;
 }
 function rdr(val = {}) {
-  let result = "";
+  let result = "<!DOCTYPE html>";
   if (Array.isArray(val)) {
     val.forEach((value) => {
       result += render(value);
@@ -193,7 +204,40 @@ function fromStr(letter, prefix = 0) {
 
 Object.defineProperty({}.__proto__, "render", {
   get: function () {
-    return rdr(this);
+    return "<!DOCTYPE html>" + rdr(this);
+  },
+});
+Object.defineProperty({}.__proto__, "css", {
+  get: function () {
+    let y = "";
+    Object.entries(this).forEach((item) => {
+      y += `${item[0]}{`;
+      Object.entries(item[1]).forEach((itm) => {
+        y += `${itm[0].replace(/[A-Z]/g, (m) => "-" + m.toLowerCase())}${
+          typeof itm[1] == "object" ? "" : ":"
+        }${typeof itm[1] == "object" ? "{" + itm[1].cssText + "}" : itm[1]}${
+          typeof itm[1] == "object" ? "" : ";"
+        }`;
+      });
+      y += "}";
+    });
+    return { text: y };
+  },
+});
+Object.defineProperty({}.__proto__, "cssText", {
+  get: function () {
+    let y = "";
+    Object.entries(this).forEach((itm) => {
+      y += `${itm[0].replace(/[A-Z]/g, (m) => "-" + m.toLowerCase())}:${
+        itm[1]
+      };`;
+    });
+    return y;
+  },
+});
+Object.defineProperty({}.__proto__, "neobiz", {
+  get: function () {
+    return { render, fromStr, range };
   },
 });
 

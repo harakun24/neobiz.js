@@ -10,6 +10,7 @@ function outFile(source, data) {
     fs.writeFileSync(source, data.render);
     console.log(`Output file: ${source}`);
   })();
+  return data.render;
 }
 
 Object.defineProperty({}.__proto__, "outFile", {

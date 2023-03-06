@@ -1,8 +1,6 @@
 <!-- @format -->
 
-<!-- @format -->
-
-# Documentation Neobiz.js 3.1
+# Documentation Neobiz.js 3.3
 
 > A simple view engine that has 100% JS features
 
@@ -53,12 +51,14 @@ const myComponent = {
 
 <br>
 
-| properties | context                               | return-type | description                      |
+| properties | caller                                | return-type | description                      |
 | ---------- | ------------------------------------- | ----------- | -------------------------------- |
 | render     | Object                                | string      | rendering to HTML                |
 | outFile    | Object @params[destination]           | void        | generate static HTML file        |
 | range      | Array @params length[int], start[int] | Array       | shortcut for looping in a range  |
 | repulse    | String                                | Object      | generate object from HTML string |
+| css        | Object                                | Object      | generate css from object         |
+| cssText    | Object                                | String      | inline css                       |
 
 #### Why use this?
 
@@ -80,12 +80,12 @@ import "neobiz";
 It's just an Object! `wrap in () to create a statement or just assign to a var`
 
 ```js
-({
+{
   // text property is same as innerText
   h1: {
     text: "Hello World!",
   },
-}.render);
+}.render;
 // <h1>Hello World!</h1>
 ```
 
@@ -226,6 +226,59 @@ export default {
 };
 ```
 
+### Style
+
+use camel case to css properties
+
+#### inline CSS:
+
+```js
+{
+  h1:{
+    text:"Hello World",
+    style:{
+      color:"#1B73F8",
+      fontSize:"150%"
+    }.cssText
+  }
+}
+```
+
+use style :
+
+`global-style.js`:
+
+```js
+export default {
+  h1: {
+    color: "red",
+  },
+  body: {
+    margin: "0px",
+    textAlign: "center",
+  },
+};
+```
+
+why should use object css rather than direct css?
+
+we can easily modify the style
+
+`main-page.js`:
+
+```js
+import style from "./global-style.js";
+
+style.body.margin = "12px";
+
+{
+  style:style.css,
+  div:{
+    h1:{text:"Hello World!"}
+  }
+}.render
+```
+
 ### Interacting with DOM
 
 use `script` to interact with browser with **html** property
@@ -246,6 +299,22 @@ wrap the script with a function, or use string
   }
 }
 
+```
+
+### Event
+
+you can add an event `this` keyword always refered to the node itseft
+
+```js
+{
+  input:{type:"password",onkeypress(){
+    if(event.keyCode==13)
+    alert(this.value)
+  }},
+  button:{text:"Click me!",onclick(){
+    this.innerText = this.innerText=="clicked"?"Click me!":"clicked";
+  }}
+}
 ```
 
 ## Repulse
