@@ -6,6 +6,12 @@
 
 Neobiz.js is pure in JS lang, transform Object into HTML
 
+new features:
+
+- add eventHandler
+- style/css
+- altering object
+
 `read /example dir to understanding`
 
 [link to usage in express.js](https://www.npmjs.com/package/neobiz-express?activeTab=dependencies)
