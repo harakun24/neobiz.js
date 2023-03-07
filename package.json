@@ -1,6 +1,6 @@
 {
   "name": "neobiz",
-  "version": "3.3.0",
+  "version": "3.8.1",
   "description": "A simple view engine with JS features",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,9 @@
     "template",
     "dom",
     "html",
-    "express"
+    "express",
+    "front-end",
+    "layout"
   ],
   "license": "MIT"
 }

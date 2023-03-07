@@ -235,9 +235,11 @@ Object.defineProperty({}.__proto__, "cssText", {
     return y;
   },
 });
-Object.defineProperty({}.__proto__, "neobiz", {
-  get: function () {
-    return { render, fromStr, range };
+
+Object.defineProperty({}.__proto__, "alter", {
+  value: function (fn) {
+    fn(this);
+    return this;
   },
 });
 

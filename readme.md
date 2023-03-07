@@ -1,6 +1,6 @@
 <!-- @format -->
 
-# Documentation Neobiz.js 3.3
+# Documentation Neobiz.js 3.8
 
 > A simple view engine that has 100% JS features
 
@@ -29,7 +29,7 @@ import "neobiz";
     id: "app",
   },
   script: {
-    html: () => {
+    html() {
       const { createApp } = Vue;
 
       createApp(myComponent).mount("#app");
@@ -54,11 +54,12 @@ const myComponent = {
 | properties | caller                                | return-type | description                      |
 | ---------- | ------------------------------------- | ----------- | -------------------------------- |
 | render     | Object                                | string      | rendering to HTML                |
-| outFile    | Object @params[destination]           | void        | generate static HTML file        |
+| outFile    | Object @params destination[string]    | void        | generate static HTML file        |
 | range      | Array @params length[int], start[int] | Array       | shortcut for looping in a range  |
 | repulse    | String                                | Object      | generate object from HTML string |
 | css        | Object                                | Object      | generate css from object         |
-| cssText    | Object                                | String      | inline css                       |
+| cssText    | Object                                | Object      | inline css                       |
+| alter      | Object @params cb[function]           | Object      | altering object before rendering |
 
 #### Why use this?
 
@@ -198,6 +199,22 @@ Can't use array? just use this:
 }
 ```
 
+### Modify an Object
+
+use `alter` properties, with function as params. no need to return a value
+
+```js
+const y = {
+  h1: { text: "Hello World!" },
+  p: { text: "this is a p" }.alter((e) => (e.class = "lorem")),
+}.alter((e) => {
+  e.h1.text = "thi is altered text";
+  e.h1.style = { color: "red", fontSize: "150%" }.cssText;
+});
+
+console.log(y.render);
+```
+
 ### Components / Partials
 
 ```js
@@ -279,6 +296,27 @@ style.body.margin = "12px";
 }.render
 ```
 
+reusable style / mixin
+
+```js
+const flex = (justify, align, direction = "row") => ({
+  display: "flex",
+  justifyContent: justify,
+  alignItems: align,
+  flexDirection: direction,
+});
+
+const space = {
+  padding: "6px 8px",
+  margin: "6px 10px",
+};
+
+console.log({
+  style: { div: flex("center", "center"), button: { border: "none", ...space } }
+    .css,
+});
+```
+
 ### Interacting with DOM
 
 use `script` to interact with browser with **html** property
@@ -354,7 +392,7 @@ result
 
 ## Pass Value
 
-use function
+use shorthand anonym function
 
 ```js
 console.log(((user) => ({ h1: { text: `Hello, ${user}` } }))("Vins").render);
@@ -395,6 +433,22 @@ IIFE if-else
         };
       return result;
     })(),
+}
+```
+
+normal if else
+
+```js
+let result;
+if (status) result = { text: "Hello World!" };
+else
+  result = {
+    a: { href: "#", text: "You are offline!" },
+  };
+
+//use
+{
+  h1: result,
 }
 ```
 
