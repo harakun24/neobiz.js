@@ -16,7 +16,7 @@ console.log(
 console.log(
   {
     h1: { text: "Hello World!" },
-  }.outFile("./basic_syntax.html:")
+  }.outFile("./basic_syntax.html")
 );
 
 // properties

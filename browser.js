@@ -1,6 +1,9 @@
 /** @format */
 
 "use strict";
+
+const adp = {};
+
 function render(val = {}) {
   let result = "";
   try {
@@ -11,6 +14,8 @@ function render(val = {}) {
         });
       } else if (typeof e[1] == "object") {
         e[0] = e[0].replace(/\s/g, "");
+        e[0] = e[1].tag || e[0];
+        delete e[1].tag;
         result += `<${e[0]}`;
         const temp = [];
         let inn = "";
@@ -205,6 +210,28 @@ function fromStr(letter, prefix = 0) {
 Object.defineProperty({}.__proto__, "render", {
   get: function () {
     return "<!DOCTYPE html>" + rdr(this);
+  },
+});
+Object.defineProperty({}.__proto__, "reg", {
+  value: function (name) {
+    const val = this;
+    if (!adp[name]) adp[name] = val;
+  },
+});
+Object.defineProperty({}.__proto__, "regm", {
+  value: function (name) {
+    const val = this;
+    if (adp[name]) adp[name] = val;
+  },
+});
+Object.defineProperty({}.__proto__, "unreg", {
+  value: function (name) {
+    delete adp[name];
+  },
+});
+Object.defineProperty({}.__proto__, "load", {
+  value: function (component) {
+    return adp[component] || "not registered";
   },
 });
 Object.defineProperty({}.__proto__, "css", {

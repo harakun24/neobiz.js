@@ -1,6 +1,6 @@
 <!-- @format -->
 
-# Documentation Neobiz.js 3.8
+# Documentation Neobiz.js 4.1.14
 
 > A simple view engine that has 100% JS features
 
@@ -8,11 +8,15 @@ Neobiz.js is pure in JS lang, transform Object into HTML
 
 new features:
 
-- add eventHandler
-- style/css
-- altering object
+- Sanitized eventHandler
+- Reusable & editable style/css
+- Altering object
+- Registering component
+- Explicit tag name supported
 
-`read /example dir to understanding`
+`read /example dir to better understanding`
+
+for browser usage use `browser.js` file.
 
 [link to usage in express.js](https://www.npmjs.com/package/neobiz-express?activeTab=dependencies)
 
@@ -57,15 +61,19 @@ const myComponent = {
 
 <br>
 
-| properties | caller                                | return-type | description                      |
-| ---------- | ------------------------------------- | ----------- | -------------------------------- |
-| render     | Object                                | string      | rendering to HTML                |
-| outFile    | Object @params destination[string]    | void        | generate static HTML file        |
-| range      | Array @params length[int], start[int] | Array       | shortcut for looping in a range  |
-| repulse    | String                                | Object      | generate object from HTML string |
-| css        | Object                                | Object      | generate css from object         |
-| cssText    | Object                                | Object      | inline css                       |
-| alter      | Object @params cb[function]           | Object      | altering object before rendering |
+| properties     | caller                                | return-type                            | description                             |
+| -------------- | ------------------------------------- | -------------------------------------- | --------------------------------------- |
+| render         | Object                                | string                                 | rendering to HTML                       |
+| outFile        | Object @params destination[string]    | void                                   | generate static HTML file               |
+| range          | Array @params length[int], start[int] | Array                                  | shortcut for looping in a range         |
+| repulse        | String                                | Object                                 | generate object from HTML string        |
+| css            | Object                                | Object                                 | generate css from object                |
+| cssText        | Object                                | Object                                 | inline css                              |
+| alter [trials] | Object @params cb[function]           | Object                                 | altering object before rendering        |
+| reg            | Object                                | void                                   | registring an object                    |
+| regm           | Object                                | void                                   | updating the existing registered object |
+| load           | Object                                | Object                                 | read an existing registered object      |
+| unred          | Object void                           | removing an existing registered object |
 
 #### Why use this?
 
@@ -182,6 +190,8 @@ Object can not use 2 keys with the same name
 }
 ```
 
+## Explicit tag name
+
 What if there is somethings in the middle of list?
 
 ```html
@@ -192,7 +202,7 @@ What if there is somethings in the middle of list?
 <li>banana</li>
 ```
 
-Can't use array? just use this:
+if we use an array there will share the tag name right? just use this:
 
 > use string as key could distinc an element with just a space
 > no need to worry, it will render without space
@@ -203,6 +213,29 @@ Can't use array? just use this:
   p:{span:{text:"This is in the middle"}},
   "li ":{text:"banana"},
 }
+```
+
+or write the tag name:
+
+```js
+{
+  li: [
+    { text: "orange" },
+    { tag: "p", span: { text: "This is in the middle" } },
+    { text: "banana" },
+  ],
+}
+```
+
+also with specifying tag name, we can name it differently:
+
+```js
+  {
+    PersonList: ["Arthur", "Zoro"].map((person) => ({
+      tag: "li",
+      text: person,
+    })),
+  }
 ```
 
 ### Modify an Object
@@ -247,6 +280,57 @@ export default {
   script: { src: "/assets/js/main.js" },
   span: { text: "this is footer" },
 };
+```
+
+### reg, regm, load & unreg Components
+
+The idea is to make object has resuability
+
+#### reg & load
+
+> this function need a single argument to set a name of registering object,
+
+there is 2 ways to registering an component:
+
+- through properties method:
+
+```js
+{ name:"viewport"}.reg("viewport")
+```
+
+- via call method:
+
+```js
+reg({ name: "viewport" }, "viewport");
+```
+
+now we can load it's value whenever we want
+
+```js
+{
+  meta:load("viewport"),
+  body: {
+  }
+}
+```
+
+#### regm
+
+this function will replace an existing registered object with a new value:
+
+```js
+const newValue = load("viewport");
+newValue.content = "width=device-width, initial-scale=1.0";
+
+newValue.regm("viewport");
+```
+
+#### unreg
+
+when we the object doesn't needed anymore, just unreg it:
+
+```js
+unreg("viewport");
 ```
 
 ### Style
@@ -501,6 +585,16 @@ map
   }
 ```
 
+filter
+
+```js
+{
+  ul: {
+    li: [].range(8, 1).filter( num => num % 2 == 0 ).map((item) => ({ text: "data-" + item })),
+  },
+}
+```
+
 for
 
 ```js
@@ -548,3 +642,5 @@ template({
   h1: { text: "Hello World!" },
 });
 ```
+
+### Thank you for read until here.

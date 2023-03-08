@@ -1,6 +1,6 @@
 {
   "name": "neobiz",
-  "version": "3.8.1",
+  "version": "4.1.14",
   "description": "A simple view engine with JS features",
   "main": "index.js",
   "scripts": {
